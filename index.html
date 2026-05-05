@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Steam Quick Links</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main>
+    <h1>Steam Quick Links</h1>
+
+    <input id="search" type="search" placeholder="Search links..." autocomplete="off" />
+
+    <div id="links">Loading links...</div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <script>
+    const linksElement = document.getElementById("links");
+    const searchElement = document.getElementById("search");
+
+    let links = [];
+
+    async function loadLinks() {
+      try {
+        const response = await fetch("links.yml", { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error(`Could not load links.yml: ${response.status}`);
+        }
+
+        const yamlText = await response.text();
+        const data = jsyaml.load(yamlText);
+
+        links = data.links || [];
+        renderLinks(links);
+      } catch (error) {
+        linksElement.innerHTML = `<p class="error">${error.message}</p>`;
+      }
+    }
+
+    function renderLinks(items) {
+      if (!items.length) {
+        linksElement.innerHTML = "<p>No links found.</p>";
+        return;
+      }
+
+      linksElement.innerHTML = items
+        .map(link => `
+          <a class="link-card" href="${escapeAttribute(link.url)}">
+            ${escapeHtml(link.name)}
+          </a>
+        `)
+        .join("");
+    }
+
+    function escapeHtml(value = "") {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function escapeAttribute(value = "") {
+      return escapeHtml(value);
+    }
+
+    searchElement.addEventListener("input", () => {
+      const search = searchElement.value.toLowerCase();
+
+      const filteredLinks = links.filter(link =>
+        link.name.toLowerCase().includes(search) ||
+        link.url.toLowerCase().includes(search)
+      );
+
+      renderLinks(filteredLinks);
+    });
+
+    loadLinks();
+  </script>
+</body>
+</html>
