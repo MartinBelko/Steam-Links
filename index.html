@@ -8,11 +8,14 @@
 </head>
 <body>
   <main>
-    <h1>Steam Quick Links</h1>
+    <div class="panel">
+      <h1>Steam Quick Links</h1>
+      <p class="subtitle">Fast shortcuts for the Steam browser</p>
 
-    <input id="search" type="search" placeholder="Search links..." autocomplete="off" />
+      <input id="search" type="search" placeholder="Search links..." autocomplete="off" aria-label="Search links" />
 
-    <div id="links">Loading links...</div>
+      <div id="links"><p class="state-message">Loading links...</p></div>
+    </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
@@ -42,17 +45,25 @@
 
     function renderLinks(items) {
       if (!items.length) {
-        linksElement.innerHTML = "<p>No links found.</p>";
+        linksElement.innerHTML = '<p class="state-message">No links found.</p>';
         return;
       }
 
       linksElement.innerHTML = items
         .map(link => `
           <a class="link-card" href="${escapeAttribute(link.url)}">
+            <span class="link-badge" aria-hidden="true">${escapeHtml(getInitials(link.name))}</span>
             ${escapeHtml(link.name)}
           </a>
         `)
         .join("");
+    }
+
+    function getInitials(name = "") {
+      const words = String(name).trim().split(/\s+/).filter(w => w.length > 0);
+      if (!words.length) return "?";
+      if (words.length === 1) return words[0].slice(0, 2);
+      return words.slice(0, 2).map(w => w[0]).join("");
     }
 
     function escapeHtml(value = "") {
