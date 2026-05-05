@@ -1,59 +1,150 @@
+:root {
+  --bg-body-end: #080c14;
+  --bg-gradient-color: #1b2a4a;
+  --bg-gradient-x: 65%;
+  --bg-gradient-y: 5%;
+  --bg-panel: rgba(18, 24, 40, 0.85);
+  --bg-card: #161b2e;
+  --bg-card-hover: #1e2540;
+  --badge-gradient-start: #1e3a5f;
+  --badge-gradient-end: #2a5080;
+  --border-subtle: rgba(99, 120, 178, 0.22);
+  --border-hover: rgba(102, 192, 244, 0.45);
+  --color-accent: #66c0f4;
+  --color-text: #c6d4df;
+  --color-muted: #7a8ea0;
+  --color-error: #ff7b7b;
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4);
+  --radius-card: 0.75rem;
+  --radius-input: 999px;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: system-ui, sans-serif;
-  background: #10141f;
-  color: #ffffff;
+  font-family: system-ui, -apple-system, sans-serif;
+  background:
+    radial-gradient(ellipse at var(--bg-gradient-x) var(--bg-gradient-y), var(--bg-gradient-color) 0%, transparent 60%),
+    linear-gradient(180deg, #0f1624 0%, var(--bg-body-end) 100%);
+  color: var(--color-text);
 }
 
 main {
-  width: min(900px, calc(100% - 2rem));
+  width: min(960px, calc(100% - 2rem));
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 3rem 0 4rem;
+}
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1.25rem;
+  padding: 2.5rem 2rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
 }
 
 h1 {
   text-align: center;
-  font-size: 3rem;
-  margin: 0 0 1.5rem;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  margin: 0 0 0.4rem;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  margin: 0 0 2rem;
 }
 
 input {
   display: block;
-  width: min(400px, 100%);
-  margin: 0 auto 2rem;
-  padding: 0.8rem 1rem;
-  border: 1px solid #2a3550;
-  border-radius: 999px;
-  background: #171d2b;
-  color: white;
+  width: min(420px, 100%);
+  box-sizing: border-box;
+  margin: 0 auto 2.5rem;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-input);
+  background: rgba(8, 12, 22, 0.75);
+  color: #e8f0f8;
   font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(102, 192, 244, 0.18);
 }
 
 #links {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
 .link-card {
-  display: block;
-  padding: 1.2rem;
-  border-radius: 0.8rem;
-  background: #171d2b;
-  color: #66c0f4;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.2rem;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  color: var(--color-accent);
   text-decoration: none;
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+  box-shadow: var(--shadow-card);
 }
 
 .link-card:hover,
-.link-card:focus {
-  background: #20283a;
+.link-card:focus-visible {
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  outline: none;
+}
+
+.link-badge {
+  flex-shrink: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 0.45rem;
+  background: linear-gradient(135deg, var(--badge-gradient-start), var(--badge-gradient-end));
+  color: var(--color-accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.state-message {
+  text-align: center;
+  color: var(--color-muted);
+  padding: 2rem 0;
+  font-size: 0.95rem;
 }
 
 .error {
-  color: #ff7b7b;
+  color: var(--color-error);
   text-align: center;
+  padding: 2rem 0;
+}
+
+@media (max-width: 480px) {
+  .panel {
+    padding: 1.5rem 1rem;
+  }
+
+  #links {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
 }
